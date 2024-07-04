@@ -18,15 +18,6 @@ const theme = createTheme({
 const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6">
-            My Material UI App
-          </Typography>
-          <Button color="inherit" component={Link} to="/">Home</Button>
-          <Button color="inherit" component={Link} to="/about">About</Button>
-        </Toolbar>
-      </AppBar>
       <Container>
         <Routes>
           <Route path="/" element={<Home />} />
