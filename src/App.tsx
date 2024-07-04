@@ -1,7 +1,6 @@
 import React from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { AppBar, Toolbar, Typography, Container, Button } from '@mui/material';
-import { Route, Routes, Link } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 
 const theme = createTheme({
@@ -18,11 +17,9 @@ const theme = createTheme({
 const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
-      <Container>
         <Routes>
           <Route path="/" element={<Home />} />
         </Routes>
-      </Container>
     </ThemeProvider>
   );
 };

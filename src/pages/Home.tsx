@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, CircularProgress } from '@mui/material';
+import { webSocketAddress } from '../config';
 
 const Home: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    const socket = new WebSocket('ws://192.168.15.5:8080');
+    const socket = new WebSocket(webSocketAddress);
 
     socket.onopen = () => {
       console.log('Connected to WebSocket server');
@@ -16,8 +17,13 @@ const Home: React.FC = () => {
 
     socket.onclose = () => {
       console.log('Disconnected from WebSocket server');
+      setLoading(false);
       setConnected(false);
     };
+
+    socket.onmessage = (message) => {
+      console.log(message)
+    }
 
     return () => {
       socket.close();
@@ -26,18 +32,17 @@ const Home: React.FC = () => {
 
   if (loading) {
     return <CircularProgress />;
+  } else {
+    return (
+      <div>
+        {connected ? (
+          <Typography variant="body1">Connected to WebSocket server.</Typography>
+        ) : (
+          <Typography variant="body1">Failed to connect to WebSocket server.</Typography>
+        )}
+      </div>
+    );
   }
-
-  return (
-    <div>
-      <Typography variant="h4">Home Page</Typography>
-      {connected ? (
-        <Typography variant="body1">Connected to WebSocket server.</Typography>
-      ) : (
-        <Typography variant="body1">Failed to connect to WebSocket server.</Typography>
-      )}
-    </div>
-  );
 };
 
 export default Home;
