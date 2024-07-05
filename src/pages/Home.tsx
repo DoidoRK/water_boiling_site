@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { Typography, CircularProgress, Button } from '@mui/material';
-import useWebSocket from '../services/useWebSockets';
+import useWebSocket from '../services/useCmdWebSocket';
 import { DataPacket, DeviceType, MessageOp, SystemParams } from '../types';
 
 const Home: React.FC = () => {
