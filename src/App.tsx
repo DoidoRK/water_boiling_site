@@ -2,6 +2,7 @@ import React from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
+import { CssBaseline } from '@mui/material/';
 import { indigo, blue, green, red, amber } from '@mui/material/colors';
 
 const theme = createTheme({
@@ -23,8 +24,8 @@ const theme = createTheme({
       main: amber[500],
     },
     background: {
-      default: '#121212', // Dark background
-      paper: '#1d1d1d', // Slightly lighter for paper elements
+      default: '#202020', // Dark background
+      paper: '#252525', // Slightly lighter for paper elements
     },
     text: {
       primary: '#ffffff', // Primary text color
@@ -35,7 +36,7 @@ const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: '#121212',
+          backgroundColor: '##1d1d1d',
         },
       },
     },
@@ -45,7 +46,7 @@ const theme = createTheme({
 const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
-        {/* <CssBaseline /> */}
+        <CssBaseline />
         <Routes>
           <Route path="/" element={<Home />} />
         </Routes>

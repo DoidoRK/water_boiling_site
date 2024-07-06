@@ -74,15 +74,6 @@ const Home: React.FC = () => {
       <div>
         {connected ? (
           <SystemVisualization/>
-          // <>
-          //   <Typography variant="body1">Connected to WebSocket server.</Typography>
-          //   <Button variant="contained" color="primary" onClick={handleSendStart}>
-          //     Start System
-          //   </Button>
-          //   <Button variant="contained" color="secondary" onClick={handleSendStop}>
-          //     Stop System
-          //   </Button>
-          // </>
         ) : (
           <Typography variant="body1">Failed to connect to WebSocket server.</Typography>
         )}
@@ -92,3 +83,12 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+// <>
+//   <Typography variant="body1">Connected to WebSocket server.</Typography>
+//   <Button variant="contained" color="primary" onClick={handleSendStart}>
+//     Start System
+//   </Button>
+//   <Button variant="contained" color="secondary" onClick={handleSendStop}>
+//     Stop System
+//   </Button>
+// </>
