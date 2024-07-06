@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react';
-import { Typography, CircularProgress, Button } from '@mui/material';
+import { Typography, CircularProgress, Button, Paper } from '@mui/material';
 import useWebSocket from '../services/useCmdWebSocket';
 import { DataPacket, DeviceType, MessageOp, SystemParams } from '../types';
+import SystemVisualization from './components/SystemVisualization';
 
 const Home: React.FC = () => {
   const { loading, connected, sendWebSocketData } = useWebSocket();
@@ -18,7 +19,7 @@ const Home: React.FC = () => {
     boiling_tank_water_min_level: 20,
   };
 
-  const handleSendData = useCallback(() => {
+  const handleSendStart = useCallback(() => {
     const newDataPacket: DataPacket = {
       device_type: DeviceType.FRONT_END,
       message_type: MessageOp.SYSTEM_STARTUP,
@@ -42,18 +43,46 @@ const Home: React.FC = () => {
     sendWebSocketData(newDataPacket);
   }, [sendWebSocketData]);
 
+  const handleSendStop = useCallback(() => {
+    const newDataPacket: DataPacket = {
+      device_type: DeviceType.FRONT_END,
+      message_type: MessageOp.SYSTEM_SHUTDOWN,
+      system_settings: mockSystemParams,
+      sensor_readings: {
+        max_sensor_tank1: 0,
+        min_sensor_tank1: 0,
+        water_level_tank1: 0,
+        temp_water_tank2: 0,
+        max_sensor_tank2: 0,
+        min_sensor_tank2: 0,
+        water_level_tank2: 0,
+        input_valve_status: 0,
+        middle_valve_status: 0,
+        output_valve_status: 0,
+        resistance_status: 0,
+        water_is_boiled: 0,
+      },
+    };
+
+    sendWebSocketData(newDataPacket);
+  }, [sendWebSocketData]);
+
   if (loading) {
     return <CircularProgress />;
   } else {
     return (
       <div>
         {connected ? (
-          <>
-            <Typography variant="body1">Connected to WebSocket server.</Typography>
-            <Button variant="contained" color="primary" onClick={handleSendData}>
-              Start System
-            </Button>
-          </>
+          <SystemVisualization/>
+          // <>
+          //   <Typography variant="body1">Connected to WebSocket server.</Typography>
+          //   <Button variant="contained" color="primary" onClick={handleSendStart}>
+          //     Start System
+          //   </Button>
+          //   <Button variant="contained" color="secondary" onClick={handleSendStop}>
+          //     Stop System
+          //   </Button>
+          // </>
         ) : (
           <Typography variant="body1">Failed to connect to WebSocket server.</Typography>
         )}
