@@ -3,9 +3,7 @@ import useCmdWebSocket from '../services/useCmdWebSocket';
 import { DataPacket, DeviceType, MessageOp, SystemParams, SensorReadings } from '../types';
 
 const useSystemSimulation = () => {
-    const [ simulationStarted, setSimulationStarted ] = useState(false);
-    const [ loading, setLoading ] = useState(false);
-    const [ systemParams, setSystemParams ] = useState<SystemParams>({
+    const systemParametersInitialState: SystemParams = {
         input_valve_flow_speed: 150,
         middle_valve_flow_speed: 150,
         output_valve_flow_speed: 150,
@@ -16,8 +14,9 @@ const useSystemSimulation = () => {
         water_tank_water_min_level: 20,
         boiling_tank_water_max_level: 95,
         boiling_tank_water_min_level: 20,
-    });
-    const [ sensorReadings, setSensorReadings ] = useState<SensorReadings>({
+    }
+    
+    const sensorReadingsInitialState: SensorReadings = {
         max_sensor_tank1: 0,
         min_sensor_tank1: 0,
         water_level_tank1: 0,
@@ -30,9 +29,37 @@ const useSystemSimulation = () => {
         output_valve_status: 0,
         resistance_status: 0,
         water_is_boiled: 0,
-    });
+    }
 
+    const [ simulationStarted, setSimulationStarted ] = useState(false);
+    const [ settingsOpen, setSettingsOpen ] = useState(false);
+    const [ loading, setLoading ] = useState(false);
+    const [ systemParams, setSystemParams ] = useState<SystemParams>(systemParametersInitialState);
+    const [ sensorReadings, setSensorReadings ] = useState<SensorReadings>(sensorReadingsInitialState);
     const { cmdSocketconnected, sendCmdWebSocketData } = useCmdWebSocket();
+    
+    useEffect(() => {
+        if(cmdSocketconnected){
+            setLoading(false);
+        }
+    }, [cmdSocketconnected]);
+
+    const handleOpenSettings = useCallback(() => {
+        setSettingsOpen(true);
+    }, [setSettingsOpen]);
+
+    const saveSettings = useCallback((newSettings: SystemParams) => {
+        setSystemParams(newSettings);
+        setSettingsOpen(false);
+    }, [setSystemParams]);
+
+    const closeSettings = useCallback(() => {
+        setSettingsOpen(false);
+    }, [setSettingsOpen]);
+
+    const resetSettings = useCallback(() => {
+        setSystemParams(systemParametersInitialState);
+    }, [setSystemParams]);
 
     const handleSendStart = useCallback(() => {
         const newDataPacket: DataPacket = {
@@ -56,14 +83,11 @@ const useSystemSimulation = () => {
         setSimulationStarted(false);
     }, [sendCmdWebSocketData]);
 
-    useEffect(() => {
-        if(cmdSocketconnected){
-            setLoading(false);
-        }
-    }, [cmdSocketconnected]);
-
     return { 
+        systemParametersInitialState,
         simulationStarted, loading,
+        settingsOpen, handleOpenSettings,
+        saveSettings, closeSettings, resetSettings,
         sensorReadings, setSensorReadings,
         systemParams, setSystemParams,
         handleSendStart, handleSendStop
