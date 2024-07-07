@@ -18,6 +18,7 @@ type SystemParams = {
     input_valve_flow_speed: number;
     middle_valve_flow_speed: number;
     output_valve_flow_speed: number;
+    target_temperature: number;
     water_boiling_rate: number;
     sensor_reading_timer: number;
     water_tank_water_max_level: number;

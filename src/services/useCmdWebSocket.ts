@@ -2,9 +2,8 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { DataPacket } from '../types';
 import { webSocketCmdAddress } from '../config';
 
-const useWebSocket = () => {
-  const [loading, setLoading] = useState(true);
-  const [connected, setConnected] = useState(false);
+const useCmdWebSocket = () => {
+  const [cmdSocketconnected, setCmdSocketConnected] = useState(false);
   const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
@@ -13,14 +12,12 @@ const useWebSocket = () => {
 
     commandSocket.onopen = () => {
       console.log('Connected to WebSocket server');
-      setLoading(false);
-      setConnected(true);
+      setCmdSocketConnected(true);
     };
 
     commandSocket.onclose = () => {
       console.log('Disconnected from WebSocket server');
-      setLoading(false);
-      setConnected(false);
+      setCmdSocketConnected(false);
     };
 
     commandSocket.onmessage = (message) => {
@@ -32,7 +29,7 @@ const useWebSocket = () => {
     };
   }, []);
 
-  const sendWebSocketData = useCallback((data: DataPacket) => {
+  const sendCmdWebSocketData = useCallback((data: DataPacket) => {
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       socketRef.current.send(JSON.stringify(data));
     } else {
@@ -40,7 +37,7 @@ const useWebSocket = () => {
     }
   }, []);
 
-  return { loading, connected, sendWebSocketData };
+  return { cmdSocketconnected, sendCmdWebSocketData };
 };
 
-export default useWebSocket;
+export default useCmdWebSocket;

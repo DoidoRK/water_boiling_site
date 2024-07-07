@@ -1,11 +1,11 @@
 import { Sensors, SensorsOff } from '@mui/icons-material';
 
 interface LevelSensorProps {
-    active: boolean;
+    active: number;
 }
 
 const LevelSensor: React.FC<LevelSensorProps> = ({ active }) => {  
-    if(active){
+    if(active === 1){
         return (
             <Sensors color='success'/>
         );

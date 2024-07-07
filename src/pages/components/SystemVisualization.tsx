@@ -1,10 +1,9 @@
 import Tank from './Tank';
 import Valve from './Valves';
-import { Box, Paper, Stack } from '@mui/material';
-import ThermostatIcon from '@mui/icons-material/Thermostat';
+import { Box, Paper, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import LevelSensor from './LevelSensor';
-import { SensorReadings } from '../../types';
+import { SensorReadings, SystemParams } from '../../types';
 import Resistance from './Resistance';
 
 const CenteredPaper = styled(Paper)(({ theme }) => ({
@@ -20,10 +19,11 @@ const CenteredPaper = styled(Paper)(({ theme }) => ({
 }));
 
 interface SystemVisualizationProps {
-  readings?: SensorReadings;
+  readings: SensorReadings;
+  systemParams: SystemParams;
 }
 
-const SystemVisualization: React.FC<SystemVisualizationProps> = ({ readings }) => {  
+const SystemVisualization: React.FC<SystemVisualizationProps> = ({ readings, systemParams }) => {  
     return (
         <Box
             display="flex"
@@ -44,12 +44,16 @@ const SystemVisualization: React.FC<SystemVisualizationProps> = ({ readings }) =
                             alignItems="flex-end"
                             spacing={20}
                         >
-                            <LevelSensor active={false}/>
-                            <LevelSensor active={true}/>
+                            <LevelSensor active={readings.max_sensor_tank1}/>
+                            <LevelSensor active={readings.min_sensor_tank1}/>
                         </Stack>
-                        <Valve state={true} />
+                        <Valve state={readings.input_valve_status} />
+                        <Typography>Input valve</Typography>
                     </Stack>
-                    <Tank value={30}/>
+                    <Stack direction="column">
+                        <Typography>Water Supply Tank</Typography>
+                        <Tank value={readings.water_level_tank1/systemParams.water_tank_water_max_level}/>
+                    </Stack>
                     <Stack direction="column">
                         <Stack
                             direction="column"
@@ -57,12 +61,16 @@ const SystemVisualization: React.FC<SystemVisualizationProps> = ({ readings }) =
                             alignItems="flex-end"
                             spacing={20}
                         >
-                            <LevelSensor active={true}/>
-                            <LevelSensor active={true}/>
+                            <LevelSensor active={readings.max_sensor_tank2}/>
+                            <LevelSensor active={readings.min_sensor_tank2}/>
                         </Stack>
-                        <Valve state={false}/>
+                        <Valve state={readings.middle_valve_status}/>
+                        <Typography>Middle valve</Typography>
                     </Stack>
-                    <Tank value={85}/>
+                    <Stack direction="column">
+                        <Typography>Boiling Tank</Typography>
+                        <Tank value={readings.water_level_tank1/systemParams.boiling_tank_water_max_level}/>
+                    </Stack>
                     <Stack direction="column">
                         <Stack
                             direction="column"
@@ -70,10 +78,11 @@ const SystemVisualization: React.FC<SystemVisualizationProps> = ({ readings }) =
                             alignItems="flex-start"
                             spacing={13}
                         >
-                            <Resistance active={true}/>
+                            <Resistance active={false}/>
                             <Box/>
                         </Stack>
-                    <Valve state={true} temperature={27}/>
+                    <Valve state={readings.output_valve_status} temperature={readings.temp_water_tank2}/>
+                    <Typography>Output valve</Typography>
                     </Stack>
                 </Stack>
             </CenteredPaper>

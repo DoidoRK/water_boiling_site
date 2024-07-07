@@ -13,13 +13,13 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 }));
 
 interface ValveProps {
-    state: boolean;
+    state: number;
     temperature?: number;
 }
 
 
 const Valve: React.FC<ValveProps> = ({ state, temperature = 27 }) => {  
-    if(state){
+    if(state === 1){
         if(temperature > 60){
             return (
               <BorderLinearProgress variant="indeterminate" color='error' />
