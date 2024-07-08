@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import useCmdWebSocket from '../services/useCmdWebSocket';
-import { DataPacket, DeviceType, MessageOp, SystemParams, SensorReadings } from '../types';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { CommandDataPacket, MessageOp, SystemParams, SensorReadings } from '../types';
+import { webSocketCmdAddress, webSocketStatusAddress } from '../config';
 
 const useSystemSimulation = () => {
     const systemParametersInitialState: SystemParams = {
@@ -36,7 +36,11 @@ const useSystemSimulation = () => {
     const [loading, setLoading] = useState(false);
     const [systemParams, setSystemParams] = useState<SystemParams>(systemParametersInitialState);
     const [sensorReadings, setSensorReadings] = useState<SensorReadings>(sensorReadingsInitialState);
-    const { cmdSocketconnected, sendCmdWebSocketData } = useCmdWebSocket();
+
+    const [cmdSocketconnected, setCmdSocketConnected] = useState(false);
+    const cmdSocketRef = useRef<WebSocket | null>(null);
+    const [statusSocketConnected, setStatusSocketConnected] = useState(false);
+    const statusSocketRef = useRef<WebSocket | null>(null);
 
     const handleOpenSettings = useCallback(() => {
         setSettingsOpen(true);
@@ -55,43 +59,83 @@ const useSystemSimulation = () => {
         setSystemParams(systemParametersInitialState);
     }, []);
 
-    const handleSendStart = useCallback(() => {
-        const newDataPacket: DataPacket = {
-            device_type: DeviceType.FRONT_END,
-            message_type: MessageOp.SYSTEM_STARTUP,
-            system_settings: systemParams,
-            sensor_readings: sensorReadings,
+    useEffect(() => {
+        const commandSocket = new WebSocket(webSocketCmdAddress);
+        cmdSocketRef.current = commandSocket;
+
+        commandSocket.onopen = () => {
+            console.log('Connected to WebSocket server');
+            setCmdSocketConnected(true);
         };
-        sendCmdWebSocketData(newDataPacket);
+
+        commandSocket.onclose = () => {
+            console.log('Disconnected from WebSocket server');
+            setCmdSocketConnected(false);
+        };
+
+        commandSocket.onmessage = (message) => {
+            console.log(message);
+        };
+
+        return () => {
+            commandSocket.close();
+        };
+    }, []);
+
+    const sendCmdWebSocketData = useCallback((CommandDataPacket : CommandDataPacket) => {
+        if (cmdSocketRef.current && cmdSocketRef.current.readyState === WebSocket.OPEN) {
+            cmdSocketRef.current.send(JSON.stringify(CommandDataPacket));
+        } else {
+            console.error('WebSocket is not open');
+        }
+    }, []);
+
+    const handleSendStart = useCallback(() => {
+        const handleStartData : CommandDataPacket = {
+            message_type: MessageOp.SYSTEM_STARTUP,
+            system_settings:systemParams,
+        }
+        sendCmdWebSocketData(handleStartData);
         setSimulationStarted(true);
-    }, [sendCmdWebSocketData, systemParams, sensorReadings]);
+    }, [sendCmdWebSocketData]);
 
     const handleSendStop = useCallback(() => {
-        const newDataPacket: DataPacket = {
-            device_type: DeviceType.FRONT_END,
+        const handleShutdownData : CommandDataPacket = {
             message_type: MessageOp.SYSTEM_SHUTDOWN,
-            system_settings: systemParams,
-            sensor_readings: sensorReadings,
-        };
-        sendCmdWebSocketData(newDataPacket);
+            system_settings:systemParams,
+        }
+        sendCmdWebSocketData(handleShutdownData);
         setSimulationStarted(false);
-    }, [sendCmdWebSocketData, systemParams, sensorReadings]);
+    }, [sendCmdWebSocketData]);
 
     useEffect(() => {
-        if (cmdSocketconnected) {
+        if (cmdSocketconnected && statusSocketConnected) {
             setLoading(false);
         }
     }, [cmdSocketconnected]);
 
-    useEffect(()=>{
-        const newDataPacket: DataPacket = {
-            device_type: DeviceType.FRONT_END,
-            message_type: MessageOp.SYSTEM_PARAM_CHANGE,
-            system_settings: systemParams,
-            sensor_readings: sensorReadings,
+    useEffect(() => {
+        const statusSocket = new WebSocket(webSocketStatusAddress);
+        statusSocketRef.current = statusSocket;
+
+        statusSocket.onopen = () => {
+            console.log('Connected to WebSocket server');
+            setStatusSocketConnected(true);
         };
-        sendCmdWebSocketData(newDataPacket);
-    },[saveSettings])
+
+        statusSocket.onclose = () => {
+            console.log('Disconnected from WebSocket server');
+            setStatusSocketConnected(false);
+        };
+
+        statusSocket.onmessage = (message) => {
+            console.log(message);
+        };
+
+        return () => {
+            statusSocket.close();
+        };
+    }, []);
 
     return { 
         systemParametersInitialState,

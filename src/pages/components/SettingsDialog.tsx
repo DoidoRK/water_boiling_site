@@ -23,7 +23,7 @@ const Transition = React.forwardRef(function Transition(
 
 
 interface SettingsDialogProps {
-  systemSettingsDefaultState: SystemParams;
+  systemSettings: SystemParams;
   settingsOpen: boolean;
   closeSettings: () => void;
   saveSettings: (newSettings: SystemParams) => void;
@@ -32,13 +32,13 @@ interface SettingsDialogProps {
 }
 
 const SettingsDialog: React.FC<SettingsDialogProps> = ({
-  systemSettingsDefaultState,
+  systemSettings,
   settingsOpen,
   closeSettings,
   saveSettings,
   resetSettings,
   }) => {
-  const [newSystemSettings, setNewSystemSettings] = useState<SystemParams>(systemSettingsDefaultState);
+  const [newSystemSettings, setNewSystemSettings] = useState<SystemParams>(systemSettings);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setNewSystemSettings({

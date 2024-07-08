@@ -1,17 +1,7 @@
 enum MessageOp {
-    CONNECTION_ATTEMPT,
-    SERVER_CONNECTION_ESTABLISHED,
-    SYSTEM_PARAM_CHANGE,
     SYSTEM_STARTUP,
-    SYSTEM_STATUS,
-    SYSTEM_INTR,
+    SYSTEM_PARAM_CHANGE,
     SYSTEM_SHUTDOWN
-}
-
-enum DeviceType {
-    ESP,
-    FRONT_END,
-    SERVER
 }
 
 type SystemParams = {
@@ -42,12 +32,14 @@ type SensorReadings = {
     water_is_boiled: number;
 }
 
-type DataPacket = {
-    device_type: DeviceType;
+type CommandDataPacket = {
     message_type: MessageOp;
     system_settings: SystemParams;
+}
+
+type StatusDataPacket = {
     sensor_readings: SensorReadings;
 }
 
-export { MessageOp, DeviceType };
-export type { SystemParams, SensorReadings, DataPacket };
+export { MessageOp };
+export type { SystemParams, SensorReadings, CommandDataPacket, StatusDataPacket };
