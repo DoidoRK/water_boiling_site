@@ -19,7 +19,7 @@ interface TankProps {
   temperature?: number;
 }
 
-const Tank: React.FC<TankProps> = ({ value = 0, temperature = 27 }) => {  
+const Tank: React.FC<TankProps> = ({ value, temperature = 27 }) => {  
   if(temperature > 60){
     return (
       <BorderLinearProgress variant="determinate" value={value} color='error' />

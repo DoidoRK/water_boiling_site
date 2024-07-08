@@ -26,7 +26,10 @@ const Home: React.FC = () => {
   } else {
     return (
       <Paper>
-        <SystemVisualization readings={ sensorReadings } systemParams={ systemParams }/>
+        <SystemVisualization
+          readings={ sensorReadings }
+          systemParams={ systemParams }
+        />
         <BottomBar
           simulationStarted={simulationStarted}
           sensorReadings={sensorReadings}

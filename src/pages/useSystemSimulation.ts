@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { CommandDataPacket, MessageOp, SystemParams, SensorReadings } from '../types';
 import { webSocketCmdAddress, webSocketStatusAddress } from '../config';
+import { jsonToSensorReadings, jsonToSystemParams } from '../utils';
 
 const useSystemSimulation = () => {
     const systemParametersInitialState: SystemParams = {
@@ -47,6 +48,11 @@ const useSystemSimulation = () => {
     }, []);
 
     const saveSettings = useCallback((newSettings: SystemParams) => {
+        const saveSettingsDataPacket : CommandDataPacket = {
+            message_type: MessageOp.SYSTEM_PARAM_CHANGE,
+            system_settings:newSettings
+        }
+        sendCmdWebSocketData(saveSettingsDataPacket);
         setSystemParams(newSettings);
         setSettingsOpen(false);
     }, []);
@@ -74,7 +80,9 @@ const useSystemSimulation = () => {
         };
 
         commandSocket.onmessage = (message) => {
-            console.log(message);
+            if(message.data.system_settings !== undefined){
+                setSystemParams(jsonToSystemParams(JSON.parse(message.data)));
+            }
         };
 
         return () => {
@@ -109,7 +117,7 @@ const useSystemSimulation = () => {
     }, [sendCmdWebSocketData]);
 
     useEffect(() => {
-        if (cmdSocketconnected && statusSocketConnected) {
+        if (!cmdSocketconnected && !statusSocketConnected) {
             setLoading(false);
         }
     }, [cmdSocketconnected]);
@@ -129,7 +137,8 @@ const useSystemSimulation = () => {
         };
 
         statusSocket.onmessage = (message) => {
-            console.log(message);
+            setSensorReadings(jsonToSensorReadings(JSON.parse(message.data)));
+            setSimulationStarted(true);
         };
 
         return () => {

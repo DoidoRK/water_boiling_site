@@ -1,11 +1,11 @@
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 
 interface ResistanceProps {
-    active: boolean;
+    active: number;
 }
 
 const Resistance: React.FC<ResistanceProps> = ({ active }) => {  
-    if(active){
+    if(active === 1){
         return (
             <LocalFireDepartmentIcon color='warning'/>
         );

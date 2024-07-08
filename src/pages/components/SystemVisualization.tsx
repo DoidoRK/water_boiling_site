@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import LevelSensor from './LevelSensor';
 import { SensorReadings, SystemParams } from '../../types';
 import Resistance from './Resistance';
+import { useEffect, useState } from 'react';
 
 const CenteredPaper = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(4),
@@ -23,7 +24,10 @@ interface SystemVisualizationProps {
   systemParams: SystemParams;
 }
 
-const SystemVisualization: React.FC<SystemVisualizationProps> = ({ readings, systemParams }) => {  
+const SystemVisualization: React.FC<SystemVisualizationProps> = ({ 
+    readings,
+    systemParams,
+}) => {
     return (
         <Box
             display="flex"
@@ -52,7 +56,7 @@ const SystemVisualization: React.FC<SystemVisualizationProps> = ({ readings, sys
                     </Stack>
                     <Stack direction="column">
                         <Typography>Water Supply Tank</Typography>
-                        <Tank value={readings.water_level_tank1/systemParams.water_tank_water_max_level}/>
+                        <Tank value={(readings.water_level_tank1/systemParams.water_tank_water_max_level)*100}/>
                     </Stack>
                     <Stack direction="column">
                         <Stack
@@ -69,7 +73,10 @@ const SystemVisualization: React.FC<SystemVisualizationProps> = ({ readings, sys
                     </Stack>
                     <Stack direction="column">
                         <Typography>Boiling Tank</Typography>
-                        <Tank value={readings.water_level_tank1/systemParams.boiling_tank_water_max_level}/>
+                        <Tank 
+                            value={(readings.water_level_tank2/systemParams.boiling_tank_water_max_level)*100}
+                            temperature={readings.temp_water_tank2}
+                        />
                     </Stack>
                     <Stack direction="column">
                         <Stack
@@ -78,7 +85,7 @@ const SystemVisualization: React.FC<SystemVisualizationProps> = ({ readings, sys
                             alignItems="flex-start"
                             spacing={13}
                         >
-                            <Resistance active={false}/>
+                            <Resistance active={readings.resistance_status}/>
                             <Box/>
                         </Stack>
                     <Valve state={readings.output_valve_status} temperature={readings.temp_water_tank2}/>

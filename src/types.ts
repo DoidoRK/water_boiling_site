@@ -37,9 +37,5 @@ type CommandDataPacket = {
     system_settings: SystemParams;
 }
 
-type StatusDataPacket = {
-    sensor_readings: SensorReadings;
-}
-
 export { MessageOp };
-export type { SystemParams, SensorReadings, CommandDataPacket, StatusDataPacket };
+export type { SystemParams, SensorReadings, CommandDataPacket };
