@@ -1,21 +1,25 @@
 import React from 'react';
 import { Typography, Button, Paper, Stack } from '@mui/material';
-import useSystemSimulation from '../useSystemSimulation';
 import SettingsIcon from '@mui/icons-material/Settings';
-import SettingsDialog from './SettingsDialog';
+import { SensorReadings, SystemParams } from '../../types';
 
-const BottomBar: React.FC = () => {
-    const { 
-        sensorReadings, 
-        simulationStarted, 
-        systemParams, 
-        handleSendStart, 
-        handleSendStop, 
-        handleOpenSettings, 
-        settingsOpen, 
-        closeSettings 
-    } = useSystemSimulation();
+interface BottomBarProps {
+    simulationStarted: boolean;
+    sensorReadings: SensorReadings;
+    systemParams: SystemParams;
+    handleSendStart: () => void;
+    handleSendStop: () => void;
+    handleOpenSettings: () => void;
+}
 
+const BottomBar: React.FC<BottomBarProps> = ({
+        simulationStarted,
+        sensorReadings,
+        systemParams,
+        handleSendStart,
+        handleSendStop,
+        handleOpenSettings,
+    }) => {
     return (
         <Paper elevation={3} sx={{ 
             position: 'fixed', bottom: 0, left: 0, right: 0, height: '160px',
@@ -56,10 +60,9 @@ const BottomBar: React.FC = () => {
                 <Typography variant="body1">Temperature in boiling tank: {sensorReadings.temp_water_tank2}° Celsius</Typography>
                 <Typography variant="body1">Target temperature: {systemParams.target_temperature}° Celsius</Typography>
             </Stack>
-            <Button variant="contained" startIcon={<SettingsIcon />} color="warning" onClick={handleOpenSettings}>
+            <Button variant="contained" startIcon={<SettingsIcon />} color="warning" onClick={handleOpenSettings} disabled={simulationStarted}>
                 System
             </Button>
-            <SettingsDialog open={settingsOpen} onClose={closeSettings} />
         </Paper>
     );
 };

@@ -31,66 +31,75 @@ const useSystemSimulation = () => {
         water_is_boiled: 0,
     }
 
-    const [ simulationStarted, setSimulationStarted ] = useState(false);
-    const [ settingsOpen, setSettingsOpen ] = useState(false);
-    const [ loading, setLoading ] = useState(false);
-    const [ systemParams, setSystemParams ] = useState<SystemParams>(systemParametersInitialState);
-    const [ sensorReadings, setSensorReadings ] = useState<SensorReadings>(sensorReadingsInitialState);
+    const [simulationStarted, setSimulationStarted] = useState(false);
+    const [settingsOpen, setSettingsOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [systemParams, setSystemParams] = useState<SystemParams>(systemParametersInitialState);
+    const [sensorReadings, setSensorReadings] = useState<SensorReadings>(sensorReadingsInitialState);
     const { cmdSocketconnected, sendCmdWebSocketData } = useCmdWebSocket();
     
     useEffect(() => {
-        if(cmdSocketconnected){
+        if (cmdSocketconnected) {
             setLoading(false);
         }
     }, [cmdSocketconnected]);
 
+    useEffect(()=>{},[settingsOpen])
+
     const handleOpenSettings = useCallback(() => {
         setSettingsOpen(true);
-    }, [setSettingsOpen]);
+    }, []);
 
     const saveSettings = useCallback((newSettings: SystemParams) => {
         setSystemParams(newSettings);
         setSettingsOpen(false);
-    }, [setSystemParams]);
+    }, []);
 
     const closeSettings = useCallback(() => {
         setSettingsOpen(false);
-    }, [setSettingsOpen]);
+    }, []);
 
     const resetSettings = useCallback(() => {
         setSystemParams(systemParametersInitialState);
-    }, [setSystemParams]);
+    }, []);
 
     const handleSendStart = useCallback(() => {
         const newDataPacket: DataPacket = {
-        device_type: DeviceType.FRONT_END,
-        message_type: MessageOp.SYSTEM_STARTUP,
-        system_settings: systemParams,
-        sensor_readings: sensorReadings,
+            device_type: DeviceType.FRONT_END,
+            message_type: MessageOp.SYSTEM_STARTUP,
+            system_settings: systemParams,
+            sensor_readings: sensorReadings,
         };
         sendCmdWebSocketData(newDataPacket);
         setSimulationStarted(true);
-    }, [sendCmdWebSocketData]);
+    }, [sendCmdWebSocketData, systemParams, sensorReadings]);
 
     const handleSendStop = useCallback(() => {
         const newDataPacket: DataPacket = {
-        device_type: DeviceType.FRONT_END,
-        message_type: MessageOp.SYSTEM_SHUTDOWN,
-        system_settings: systemParams,
-        sensor_readings: sensorReadings,
+            device_type: DeviceType.FRONT_END,
+            message_type: MessageOp.SYSTEM_SHUTDOWN,
+            system_settings: systemParams,
+            sensor_readings: sensorReadings,
         };
         sendCmdWebSocketData(newDataPacket);
         setSimulationStarted(false);
-    }, [sendCmdWebSocketData]);
+    }, [sendCmdWebSocketData, systemParams, sensorReadings]);
 
     return { 
         systemParametersInitialState,
-        simulationStarted, loading,
-        settingsOpen, handleOpenSettings,
-        saveSettings, closeSettings, resetSettings,
-        sensorReadings, setSensorReadings,
-        systemParams, setSystemParams,
-        handleSendStart, handleSendStop
+        simulationStarted, 
+        loading,
+        settingsOpen, 
+        handleOpenSettings,
+        saveSettings, 
+        closeSettings, 
+        resetSettings,
+        sensorReadings, 
+        setSensorReadings,
+        systemParams, 
+        setSystemParams,
+        handleSendStart, 
+        handleSendStop
     };
 };
 
