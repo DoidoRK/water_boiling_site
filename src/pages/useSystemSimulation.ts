@@ -37,14 +37,6 @@ const useSystemSimulation = () => {
     const [systemParams, setSystemParams] = useState<SystemParams>(systemParametersInitialState);
     const [sensorReadings, setSensorReadings] = useState<SensorReadings>(sensorReadingsInitialState);
     const { cmdSocketconnected, sendCmdWebSocketData } = useCmdWebSocket();
-    
-    useEffect(() => {
-        if (cmdSocketconnected) {
-            setLoading(false);
-        }
-    }, [cmdSocketconnected]);
-
-    useEffect(()=>{},[settingsOpen])
 
     const handleOpenSettings = useCallback(() => {
         setSettingsOpen(true);
@@ -84,6 +76,22 @@ const useSystemSimulation = () => {
         sendCmdWebSocketData(newDataPacket);
         setSimulationStarted(false);
     }, [sendCmdWebSocketData, systemParams, sensorReadings]);
+
+    useEffect(() => {
+        if (cmdSocketconnected) {
+            setLoading(false);
+        }
+    }, [cmdSocketconnected]);
+
+    useEffect(()=>{
+        const newDataPacket: DataPacket = {
+            device_type: DeviceType.FRONT_END,
+            message_type: MessageOp.SYSTEM_PARAM_CHANGE,
+            system_settings: systemParams,
+            sensor_readings: sensorReadings,
+        };
+        sendCmdWebSocketData(newDataPacket);
+    },[saveSettings])
 
     return { 
         systemParametersInitialState,

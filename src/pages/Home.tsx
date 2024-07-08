@@ -37,7 +37,7 @@ const Home: React.FC = () => {
           handleOpenSettings={handleOpenSettings}
         />
         <SettingsDialog
-          systemSettings={systemParams}
+          systemSettingsDefaultState={systemParametersInitialState}
           settingsOpen={settingsOpen}
           closeSettings={closeSettings}
           saveSettings={saveSettings}
