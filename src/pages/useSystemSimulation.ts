@@ -18,6 +18,7 @@ const useSystemSimulation = () => {
     }
     
     const sensorReadingsInitialState: SensorReadings = {
+        draining_system: 0,
         max_sensor_tank1: 0,
         min_sensor_tank1: 0,
         water_level_tank1: 0,
@@ -138,7 +139,6 @@ const useSystemSimulation = () => {
 
         statusSocket.onmessage = (message) => {
             setSensorReadings(jsonToSensorReadings(JSON.parse(message.data)));
-            setSimulationStarted(true);
         };
 
         return () => {

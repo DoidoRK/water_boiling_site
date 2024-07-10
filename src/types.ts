@@ -18,6 +18,7 @@ type SystemParams = {
 }
 
 type SensorReadings = {
+    draining_system: number;
     max_sensor_tank1: number;
     min_sensor_tank1: number;
     water_level_tank1: number;

@@ -26,7 +26,7 @@ const BottomBar: React.FC<BottomBarProps> = ({
             display: 'flex', alignItems: 'center', justifyContent: 'space-evenly'
             }}>
             { !simulationStarted ? (
-                <Button variant="contained" color="success" onClick={ handleSendStart }>
+                <Button variant="contained" color="success" onClick={ handleSendStart } disabled={sensorReadings.draining_system === 1}>
                     Start System
                 </Button>
             ) : (
@@ -60,8 +60,11 @@ const BottomBar: React.FC<BottomBarProps> = ({
                 <Typography variant="body1">Temperature in boiling tank: {sensorReadings.temp_water_tank2}° Celsius</Typography>
                 <Typography variant="body1">Target temperature: {systemParams.target_temperature}° Celsius</Typography>
             </Stack>
-            <Button variant="contained" startIcon={<SettingsIcon />} color="warning" onClick={handleOpenSettings} disabled={simulationStarted}>
-                System
+            <Button variant="contained" startIcon={<SettingsIcon />} color="warning"
+                onClick={handleOpenSettings}
+                disabled={simulationStarted || (sensorReadings.draining_system === 1)}
+            >
+                Settings
             </Button>
         </Paper>
     );

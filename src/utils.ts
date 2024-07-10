@@ -17,6 +17,7 @@ const jsonToSystemParams = (json: any): SystemParams => {
 
 const jsonToSensorReadings = (json: any): SensorReadings => {
     return {
+      draining_system: json.draining_system,
       max_sensor_tank1: json.max_sensor_tank1,
       min_sensor_tank1: json.min_sensor_tank1,
       water_level_tank1: json.water_level_tank1,

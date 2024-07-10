@@ -7,6 +7,7 @@ import SettingsDialog from './components/SettingsDialog';
 
 const Home: React.FC = () => {
   const {
+    systemParametersInitialState,
     simulationStarted, 
     loading,
     settingsOpen, 
@@ -39,6 +40,7 @@ const Home: React.FC = () => {
           handleOpenSettings={handleOpenSettings}
         />
         <SettingsDialog
+          systemParametersInitialState={systemParametersInitialState}
           systemSettings={systemParams}
           settingsOpen={settingsOpen}
           closeSettings={closeSettings}
