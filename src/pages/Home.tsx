@@ -1,12 +1,14 @@
 import React from 'react';
-import { CircularProgress, Paper } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
 import SystemVisualization from './components/SystemVisualization';
 import useSystemSimulation from './useSystemSimulation';
 import BottomBar from './components/BottomBar';
 import SettingsDialog from './components/SettingsDialog';
+import LoadingComponent from './components/LoadingComponent';
 
 const Home: React.FC = () => {
   const {
+    isOwner,
     systemParametersInitialState,
     simulationStarted, 
     loading,
@@ -22,16 +24,34 @@ const Home: React.FC = () => {
     handleSendStop
   } = useSystemSimulation();
 
+  const TopMessage = (() => {
+      if(isOwner){
+          return(
+            <Typography>
+              YOU ARE CONTROLLING THE SYSTEM.
+            </Typography>
+          )
+      } else {
+          return(
+            <Typography>
+              SOMEONE ELSE IS CONTROLLING THE SYSTEM. WHEN THEY QUIT YOU'LL ASSUME CONTROL.
+            </Typography>
+          )
+      }
+  })
+
   if (loading) {
-    return <CircularProgress />;
+    return <LoadingComponent/>;
   } else {
     return (
       <Paper>
+        {TopMessage()}
         <SystemVisualization
           readings={ sensorReadings }
           systemParams={ systemParams }
         />
         <BottomBar
+          isOwner={isOwner}
           simulationStarted={simulationStarted}
           sensorReadings={sensorReadings}
           systemParams={systemParams}

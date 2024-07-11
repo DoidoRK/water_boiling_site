@@ -34,6 +34,7 @@ const useSystemSimulation = () => {
     }
 
     const [simulationStarted, setSimulationStarted] = useState(false);
+    const [isOwner, setIsOwner] = useState(false);
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [systemParams, setSystemParams] = useState<SystemParams>(systemParametersInitialState);
@@ -67,35 +68,42 @@ const useSystemSimulation = () => {
     }, []);
 
     useEffect(() => {
-        const commandSocket = new WebSocket(webSocketCmdAddress);
-        cmdSocketRef.current = commandSocket;
-
-        commandSocket.onopen = () => {
-            console.log('Connected to WebSocket server');
-            setCmdSocketConnected(true);
-        };
-
-        commandSocket.onclose = () => {
-            console.log('Disconnected from WebSocket server');
-            setCmdSocketConnected(false);
-        };
-
-        commandSocket.onmessage = (message) => {
-            if(message.data.system_settings !== undefined){
-                setSystemParams(jsonToSystemParams(JSON.parse(message.data)));
-            }
-        };
-
-        return () => {
-            commandSocket.close();
-        };
-    }, []);
+        if(cmdSocketRef.current === null){
+            const commandSocket = new WebSocket(webSocketCmdAddress);
+            cmdSocketRef.current = commandSocket;
+    
+            commandSocket.onopen = () => {
+                console.log('Command WebSocket Connected server');
+                setCmdSocketConnected(true);
+            };
+    
+            commandSocket.onclose = () => {
+                console.log('Command WebSocket Disconnected server');
+                setCmdSocketConnected(false);
+            };
+    
+            commandSocket.onmessage = (message) => {
+                const messageData = JSON.parse(message.data)
+                if(messageData.systemParams !== undefined){
+                    setSystemParams(jsonToSystemParams(messageData.systemParams));
+                }
+                if(messageData.hasOwner !== undefined){
+                    if(messageData.hasOwner){
+                        setIsOwner(false);
+                    } else {
+                        setIsOwner(true);
+                    }
+                    setSimulationStarted(messageData.isRunning)
+                }
+            };
+        }
+    }, [cmdSocketconnected,isOwner]);
 
     const sendCmdWebSocketData = useCallback((CommandDataPacket : CommandDataPacket) => {
         if (cmdSocketRef.current && cmdSocketRef.current.readyState === WebSocket.OPEN) {
             cmdSocketRef.current.send(JSON.stringify(CommandDataPacket));
         } else {
-            console.error('WebSocket is not open');
+            console.error('Command WebSocket is not open');
         }
     }, []);
 
@@ -119,34 +127,35 @@ const useSystemSimulation = () => {
 
     useEffect(() => {
         if (!cmdSocketconnected && !statusSocketConnected) {
+            setLoading(true);
+        } else {
             setLoading(false);
         }
     }, [cmdSocketconnected]);
 
     useEffect(() => {
-        const statusSocket = new WebSocket(webSocketStatusAddress);
-        statusSocketRef.current = statusSocket;
-
-        statusSocket.onopen = () => {
-            console.log('Connected to WebSocket server');
-            setStatusSocketConnected(true);
-        };
-
-        statusSocket.onclose = () => {
-            console.log('Disconnected from WebSocket server');
-            setStatusSocketConnected(false);
-        };
-
-        statusSocket.onmessage = (message) => {
-            setSensorReadings(jsonToSensorReadings(JSON.parse(message.data)));
-        };
-
-        return () => {
-            statusSocket.close();
-        };
+        if(statusSocketRef.current === null){
+            const statusSocket = new WebSocket(webSocketStatusAddress);
+            statusSocketRef.current = statusSocket;
+    
+            statusSocket.onopen = () => {
+                console.log('WebSocket Status Connected');
+                setStatusSocketConnected(true);
+            };
+    
+            statusSocket.onclose = () => {
+                console.log('Status WebSocket disconnected');
+                setStatusSocketConnected(false);
+            };
+    
+            statusSocket.onmessage = (message) => {
+                setSensorReadings(jsonToSensorReadings(JSON.parse(message.data)));
+            };
+        }
     }, []);
 
     return { 
+        isOwner,
         systemParametersInitialState,
         simulationStarted, 
         loading,
