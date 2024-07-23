@@ -41,55 +41,99 @@ const SystemVisualization: React.FC<SystemVisualizationProps> = ({
                     justifyContent="center"
                     alignItems="flex-end"
                 >
-                    <Stack direction="column">
+                    <Stack direction="column" alignItems="stretch"  justifyContent="center">
                         <Stack
                             direction="column"
                             justifyContent="space-between"
                             alignItems="flex-end"
                             spacing={20}
                         >
-                            <LevelSensor active={readings.max_sensor_tank1}/>
-                            <LevelSensor active={readings.min_sensor_tank1}/>
+                            <Stack direction="row" alignItems="center" spacing={1}>
+                                <Typography variant="caption">
+                                    Detection volume: {systemParams.water_tank_water_max_level} m3/s
+                                </Typography>
+                                <LevelSensor active={readings.max_sensor_tank1}/>
+                            </Stack>
+                            <Stack direction="row" alignItems="center" spacing={1}>
+                                <Typography variant="caption">
+                                    Detection volume: {systemParams.water_tank_water_min_level} m3/s
+                                </Typography>
+                                <LevelSensor active={readings.min_sensor_tank1}/>
+                            </Stack>
                         </Stack>
                         <Valve state={readings.input_valve_status} />
                         <Typography>Input valve</Typography>
+                        <Typography variant="caption">Flow rate: {systemParams.input_valve_flow_speed} m3/s</Typography>
                     </Stack>
                     <Stack direction="column">
                         <Typography>Water Supply Tank</Typography>
-                        <Tank value={(readings.water_level_tank1/systemParams.water_tank_water_max_level)*100}/>
-                    </Stack>
-                    <Stack direction="column">
-                        <Stack
-                            direction="column"
-                            justifyContent="space-between"
-                            alignItems="flex-end"
-                            spacing={20}
-                        >
-                            <LevelSensor active={readings.max_sensor_tank2}/>
-                            <LevelSensor active={readings.min_sensor_tank2}/>
-                        </Stack>
-                        <Valve state={readings.middle_valve_status}/>
-                        <Typography>Middle valve</Typography>
-                    </Stack>
-                    <Stack direction="column">
-                        <Typography>Boiling Tank</Typography>
-                        <Tank 
-                            value={(readings.water_level_tank2/systemParams.boiling_tank_water_max_level)*100}
-                            temperature={readings.temp_water_tank2}
+                        <Typography>Volume: {systemParams.water_supply_volume} m3</Typography>
+                        <Tank
+                            water_volume={readings.water_level_tank1}
+                            value={(readings.water_level_tank1/systemParams.water_supply_volume)*100}
                         />
                     </Stack>
                     <Stack direction="column">
                         <Stack
                             direction="column"
                             justifyContent="space-between"
+                            alignItems="flex-end"
+                            spacing={20}
+                        >
+                            <Stack direction="row" alignItems="center" spacing={1}>
+                                <Typography variant="caption">
+                                    Detection volume: {systemParams.boiling_tank_water_max_level} m3/s
+                                </Typography>
+                                <LevelSensor active={readings.max_sensor_tank2}/>
+                            </Stack>
+                            <Stack direction="row" alignItems="center" spacing={1}>
+                                <Typography variant="caption">
+                                    Detection volume: {systemParams.boiling_tank_water_min_level} m3/s
+                                </Typography>
+                                <LevelSensor active={readings.min_sensor_tank2}/>
+                            </Stack>
+                        </Stack>
+                        <Valve state={readings.middle_valve_status}/>
+                        <Typography>Middle valve</Typography>
+                        <Typography variant="caption">
+                            Flow rate: {systemParams.middle_valve_flow_speed} m3/s
+                        </Typography>
+                    </Stack>
+                    <Stack direction="column">
+                        <Typography>Boiling Tank</Typography>
+                        <Typography>Volume: {systemParams.boiling_tank_volume} m3</Typography>
+                        <Tank 
+                            water_volume={readings.water_level_tank2}
+                            value={(readings.water_level_tank2/systemParams.boiling_tank_volume)*100}
+                            temperature={readings.temp_water_tank2}
+                        />
+                    </Stack>
+                    <Stack direction="column">
+                        <Stack
+                            direction="column"
+                            justifyContent="flex-start"
                             alignItems="flex-start"
                             spacing={13}
                         >
-                            <Resistance active={readings.resistance_status}/>
+                            <Stack direction="column"
+                                justifyContent="flex-start"
+                                alignItems="flex-start"
+                            >
+                                <Resistance active={readings.resistance_status}/>
+                                <Stack direction="column"
+                                    justifyContent="center"
+                                    alignItems="flex-start"
+                                >
+                                    <Typography variant="caption">Temperature increase rate: {systemParams.water_boiling_rate}°C/s</Typography>
+                                    <Typography variant="caption">Target temperature: {systemParams.target_temperature}°C</Typography>
+                                    <Typography variant="caption">Current Temperature: {readings.temp_water_tank2}°C</Typography>
+                                </Stack>
+                            </Stack>
                             <Box/>
                         </Stack>
                     <Valve state={readings.output_valve_status} temperature={readings.temp_water_tank2}/>
                     <Typography>Output valve</Typography>
+                    <Typography variant="caption">Flow rate: {systemParams.output_valve_flow_speed} m3/s</Typography>
                     </Stack>
                 </Stack>
             </CenteredPaper>
