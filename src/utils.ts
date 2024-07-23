@@ -2,6 +2,8 @@ import { SystemParams, SensorReadings } from './types';
 
 const jsonToSystemParams = (json: any): SystemParams => {
     return {
+        water_supply_volume: json.water_supply_volume,
+        boiling_tank_volume: json.boiling_tank_volume,
         input_valve_flow_speed: json.input_valve_flow_speed,
         middle_valve_flow_speed: json.middle_valve_flow_speed,
         output_valve_flow_speed: json.output_valve_flow_speed,

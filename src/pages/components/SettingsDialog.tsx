@@ -80,7 +80,16 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 Water Supply Settings
               </Typography>
               <TextField
-                label="Water Supply Max Level"
+                label="Water Supply Volume"
+                name="water_supply_volume"
+                type="string"
+                value={newSystemSettings.water_supply_volume}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Water Supply Max Sensor"
                 name="water_tank_water_max_level"
                 type="string"
                 value={newSystemSettings.water_tank_water_max_level}
@@ -89,7 +98,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 margin="normal"
               />
               <TextField
-                label="Water Supply Min Level"
+                label="Water Supply Min Sensor"
                 name="water_tank_water_min_level"
                 type="string"
                 value={newSystemSettings.water_tank_water_min_level}
@@ -104,7 +113,16 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 Boiling Tank Settings
               </Typography>
               <TextField
-                label="Boiling Tank Max Level"
+                label="Boiling Tank Volume"
+                name="boiling_tank_volume"
+                type="string"
+                value={newSystemSettings.boiling_tank_volume}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Boiling Tank Max Sensor"
                 name="boiling_tank_water_max_level"
                 type="string"
                 value={newSystemSettings.boiling_tank_water_max_level}
@@ -113,7 +131,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 margin="normal"
               />
               <TextField
-                label="Boiling Tank Min Level"
+                label="Boiling Tank Min Sensor"
                 name="boiling_tank_water_min_level"
                 type="string"
                 value={newSystemSettings.boiling_tank_water_min_level}

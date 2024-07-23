@@ -5,6 +5,8 @@ import { jsonToSensorReadings, jsonToSystemParams } from '../utils';
 
 const useSystemSimulation = () => {
     const systemParametersInitialState: SystemParams = {
+        water_supply_volume:100,
+        boiling_tank_volume:100,
         input_valve_flow_speed: 150,
         middle_valve_flow_speed: 150,
         output_valve_flow_speed: 150,
