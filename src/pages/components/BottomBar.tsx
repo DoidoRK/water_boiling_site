@@ -41,50 +41,29 @@ const BottomBar: React.FC<BottomBarProps> = ({
         }
     })
 
+    const OwnerMessage = (() => {
+        if(isOwner){
+            return(
+              <Typography color='#4caf50'>
+                YOU ARE CONTROLLING THE SYSTEM.
+              </Typography>
+            )
+        } else {
+            return(
+              <Typography color="#f44336">
+                SOMEONE ELSE IS CONTROLLING THE SYSTEM. WHEN THEY QUIT YOU'LL ASSUME CONTROL.
+              </Typography>
+            )
+        }
+    })
+
     return (
         <Paper elevation={3} sx={{ 
             position: 'fixed', bottom: 0, left: 0, right: 0, height: '160px',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-evenly'
+            display: 'flex', alignItems: 'center', justifyContent: 'space-around'
             }}>
             {controlButton()}
-            <Stack direction="column">
-                <Typography variant="body1">
-                    Water Supply max level sensor detection level: {systemParams.water_tank_water_max_level} m3
-                </Typography>
-                <Typography variant="body1">
-                    Water Supply min level sensor detection level: {systemParams.water_tank_water_min_level} m3
-                </Typography>
-                <Typography variant="body1">
-                    Water level in water supply: {sensorReadings.water_level_tank1} m3
-                </Typography>
-                <Typography variant="body1">
-                    Input valve flow speed: {systemParams.input_valve_flow_speed} m3
-                </Typography>
-            </Stack>
-            <Stack direction="column">
-                <Typography variant="body1">
-                    Boiling tank max level sensor detection level: {systemParams.boiling_tank_water_max_level} m3
-                </Typography>
-                <Typography variant="body1">
-                    Boiling tank min level sensor detection level: {systemParams.boiling_tank_water_min_level} m3
-                </Typography>
-                <Typography variant="body1">
-                    Water level in boiling tank: {sensorReadings.water_level_tank2} m3
-                </Typography>
-                <Typography variant="body1">
-                    Middle valve flow speed: {systemParams.middle_valve_flow_speed} m3
-                </Typography>
-            </Stack>
-            <Stack direction="column">
-                <Typography variant="body1">Temperature in boiling tank: {sensorReadings.temp_water_tank2}° Celsius</Typography>
-                <Typography variant="body1">Target temperature: {systemParams.target_temperature}° Celsius</Typography>
-                <Typography variant="body1">
-                    Output valve flow speed: {systemParams.output_valve_flow_speed} m3
-                </Typography>
-                <Typography variant="body1">
-                    Water temperature increase rate: {systemParams.water_boiling_rate} m3
-                </Typography>
-            </Stack>
+            {OwnerMessage()}
             <Button variant="contained" startIcon={<SettingsIcon />} color="warning"
                 onClick={handleOpenSettings}
                 disabled={simulationStarted || (sensorReadings.draining_system === 1 || !isOwner)}

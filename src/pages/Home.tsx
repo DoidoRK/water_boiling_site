@@ -24,28 +24,11 @@ const Home: React.FC = () => {
     handleSendStop
   } = useSystemSimulation();
 
-  const TopMessage = (() => {
-      if(isOwner){
-          return(
-            <Typography>
-              YOU ARE CONTROLLING THE SYSTEM.
-            </Typography>
-          )
-      } else {
-          return(
-            <Typography>
-              SOMEONE ELSE IS CONTROLLING THE SYSTEM. WHEN THEY QUIT YOU'LL ASSUME CONTROL.
-            </Typography>
-          )
-      }
-  })
-
   if (loading) {
     return <LoadingComponent/>;
   } else {
     return (
       <Paper>
-        {TopMessage()}
         <SystemVisualization
           readings={ sensorReadings }
           systemParams={ systemParams }
