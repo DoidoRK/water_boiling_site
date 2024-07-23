@@ -45,7 +45,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     let newValue = parseInt(value);
-    if(typeof newValue === 'number' && !Number.isNaN(newValue)){
+    if(typeof newValue === 'number' && !Number.isNaN(newValue) && newValue > -1){
       setNewSystemSettings({
         ...newSystemSettings,
         [name]: newValue,

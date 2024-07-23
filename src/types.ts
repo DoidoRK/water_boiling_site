@@ -5,6 +5,8 @@ enum MessageOp {
 }
 
 type SystemParams = {
+    water_supply_volume: number;
+    boiling_tank_volume: number;
     input_valve_flow_speed: number;
     middle_valve_flow_speed: number;
     output_valve_flow_speed: number;

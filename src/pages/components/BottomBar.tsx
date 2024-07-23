@@ -82,7 +82,7 @@ const BottomBar: React.FC<BottomBarProps> = ({
                     Output valve flow speed: {systemParams.output_valve_flow_speed} m3
                 </Typography>
                 <Typography variant="body1">
-                    water_boiling_rate: {systemParams.water_boiling_rate} m3
+                    Water temperature increase rate: {systemParams.water_boiling_rate} m3
                 </Typography>
             </Stack>
             <Button variant="contained" startIcon={<SettingsIcon />} color="warning"
