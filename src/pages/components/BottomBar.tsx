@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Button, Paper, Stack } from '@mui/material';
+import { Typography, Button, Paper } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { SensorReadings, SystemParams } from '../../types';
 
