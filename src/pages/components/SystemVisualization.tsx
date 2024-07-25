@@ -5,7 +5,6 @@ import { styled } from '@mui/material/styles';
 import LevelSensor from './LevelSensor';
 import { SensorReadings, SystemParams } from '../../types';
 import Resistance from './Resistance';
-import { useEffect, useState } from 'react';
 
 const CenteredPaper = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(4),
