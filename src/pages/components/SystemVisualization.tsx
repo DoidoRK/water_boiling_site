@@ -50,13 +50,13 @@ const SystemVisualization: React.FC<SystemVisualizationProps> = ({
                         >
                             <Stack direction="row" alignItems="center" spacing={1}>
                                 <Typography variant="caption">
-                                    Detection volume: {systemParams.water_tank_water_max_level} m3/s
+                                    Detection volume: {systemParams.water_tank_water_max_level} m3
                                 </Typography>
                                 <LevelSensor active={readings.max_sensor_tank1}/>
                             </Stack>
                             <Stack direction="row" alignItems="center" spacing={1}>
                                 <Typography variant="caption">
-                                    Detection volume: {systemParams.water_tank_water_min_level} m3/s
+                                    Detection volume: {systemParams.water_tank_water_min_level} m3
                                 </Typography>
                                 <LevelSensor active={readings.min_sensor_tank1}/>
                             </Stack>
@@ -82,13 +82,13 @@ const SystemVisualization: React.FC<SystemVisualizationProps> = ({
                         >
                             <Stack direction="row" alignItems="center" spacing={1}>
                                 <Typography variant="caption">
-                                    Detection volume: {systemParams.boiling_tank_water_max_level} m3/s
+                                    Detection volume: {systemParams.boiling_tank_water_max_level} m3
                                 </Typography>
                                 <LevelSensor active={readings.max_sensor_tank2}/>
                             </Stack>
                             <Stack direction="row" alignItems="center" spacing={1}>
                                 <Typography variant="caption">
-                                    Detection volume: {systemParams.boiling_tank_water_min_level} m3/s
+                                    Detection volume: {systemParams.boiling_tank_water_min_level} m3
                                 </Typography>
                                 <LevelSensor active={readings.min_sensor_tank2}/>
                             </Stack>
