@@ -58,6 +58,29 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     }
   };
 
+  const handleRatesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    let newValue = parseInt(value);
+    if(typeof newValue === 'number' && !Number.isNaN(newValue) && newValue > -1){
+      if(newValue > 1000) {
+        setNewSystemSettings({
+          ...newSystemSettings,
+          [name]: 1000,
+        });
+      } else {
+        setNewSystemSettings({
+          ...newSystemSettings,
+          [name]: newValue,
+        });  
+      }
+    } else {
+      setNewSystemSettings({
+        ...newSystemSettings,
+        [name]: 0,
+      });
+    }
+  };
+
   const handleResetSettings = ( (event: React.ChangeEvent<HTMLInputElement>) => {
     resetSettings()
     setNewSystemSettings(systemParametersInitialState)
@@ -80,7 +103,16 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 Water Supply Settings
               </Typography>
               <TextField
-                label="Water Supply Max Level"
+                label="Water Supply Volume"
+                name="water_supply_volume"
+                type="string"
+                value={newSystemSettings.water_supply_volume}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Water Supply Max Sensor"
                 name="water_tank_water_max_level"
                 type="string"
                 value={newSystemSettings.water_tank_water_max_level}
@@ -89,7 +121,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 margin="normal"
               />
               <TextField
-                label="Water Supply Min Level"
+                label="Water Supply Min Sensor"
                 name="water_tank_water_min_level"
                 type="string"
                 value={newSystemSettings.water_tank_water_min_level}
@@ -104,7 +136,16 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 Boiling Tank Settings
               </Typography>
               <TextField
-                label="Boiling Tank Max Level"
+                label="Boiling Tank Volume"
+                name="boiling_tank_volume"
+                type="string"
+                value={newSystemSettings.boiling_tank_volume}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Boiling Tank Max Sensor"
                 name="boiling_tank_water_max_level"
                 type="string"
                 value={newSystemSettings.boiling_tank_water_max_level}
@@ -113,7 +154,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 margin="normal"
               />
               <TextField
-                label="Boiling Tank Min Level"
+                label="Boiling Tank Min Sensor"
                 name="boiling_tank_water_min_level"
                 type="string"
                 value={newSystemSettings.boiling_tank_water_min_level}
@@ -140,7 +181,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 name="water_boiling_rate"
                 type="string"
                 value={newSystemSettings.water_boiling_rate}
-                onChange={handleChange}
+                onChange={handleRatesChange}
                 fullWidth
                 margin="normal"
               />
@@ -156,7 +197,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               name="input_valve_flow_speed"
               type="string"
               value={newSystemSettings.input_valve_flow_speed}
-              onChange={handleChange}
+              onChange={handleRatesChange}
               fullWidth
               margin="normal"
             />
@@ -165,7 +206,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               name="middle_valve_flow_speed"
               type="string"
               value={newSystemSettings.middle_valve_flow_speed}
-              onChange={handleChange}
+              onChange={handleRatesChange}
               fullWidth
               margin="normal"
             />
@@ -174,7 +215,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               name="output_valve_flow_speed"
               type="string"
               value={newSystemSettings.output_valve_flow_speed}
-              onChange={handleChange}
+              onChange={handleRatesChange}
               fullWidth
               margin="normal"
             />
