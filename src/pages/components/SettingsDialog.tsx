@@ -58,6 +58,29 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     }
   };
 
+  const handleRatesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    let newValue = parseInt(value);
+    if(typeof newValue === 'number' && !Number.isNaN(newValue) && newValue > -1){
+      if(newValue > 1000) {
+        setNewSystemSettings({
+          ...newSystemSettings,
+          [name]: 1000,
+        });
+      } else {
+        setNewSystemSettings({
+          ...newSystemSettings,
+          [name]: newValue,
+        });  
+      }
+    } else {
+      setNewSystemSettings({
+        ...newSystemSettings,
+        [name]: 0,
+      });
+    }
+  };
+
   const handleResetSettings = ( (event: React.ChangeEvent<HTMLInputElement>) => {
     resetSettings()
     setNewSystemSettings(systemParametersInitialState)
@@ -158,7 +181,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 name="water_boiling_rate"
                 type="string"
                 value={newSystemSettings.water_boiling_rate}
-                onChange={handleChange}
+                onChange={handleRatesChange}
                 fullWidth
                 margin="normal"
               />
@@ -174,7 +197,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               name="input_valve_flow_speed"
               type="string"
               value={newSystemSettings.input_valve_flow_speed}
-              onChange={handleChange}
+              onChange={handleRatesChange}
               fullWidth
               margin="normal"
             />
@@ -183,7 +206,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               name="middle_valve_flow_speed"
               type="string"
               value={newSystemSettings.middle_valve_flow_speed}
-              onChange={handleChange}
+              onChange={handleRatesChange}
               fullWidth
               margin="normal"
             />
@@ -192,7 +215,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               name="output_valve_flow_speed"
               type="string"
               value={newSystemSettings.output_valve_flow_speed}
-              onChange={handleChange}
+              onChange={handleRatesChange}
               fullWidth
               margin="normal"
             />
